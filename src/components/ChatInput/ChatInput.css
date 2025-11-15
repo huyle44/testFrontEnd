@@ -1,6 +1,13 @@
+/* --- Lớp bao bọc chính --- */
 .chat-input-wrapper {
+  /* (SỬA) Thêm dòng này: */
+  flex-shrink: 0; /* Không bao giờ co lại */
+
   padding: 16px 24px;
   transition: background-color 0.3s, border-color 0.3s;
+  
+  /* (SỬA) Thêm dòng này để đẩy ô input lên trên Home Bar của iPhone */
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
 }
 
 /* Kiểu theme Sáng */
@@ -49,7 +56,7 @@
 
 /* Ưu tiên màu đỏ khi đang ghi âm */
 .chat-input-button[data-recording='true'] {
-  color: #f5222d !important; /* Dùng !important để ghi đè màu của theme */
+  color: #f5222d !important; 
 }
 
 
@@ -61,14 +68,16 @@
   background: transparent;
 }
 
-/* ... (Thêm vào cuối file CSS của bạn) ... */
-
 /* (MỚI) Khu vực chứa các file chờ */
 .staged-files-container {
-  padding: 0 8px 12px 8px; /* Đệm ở trên thanh input */
+  padding: 0 8px 12px 8px; 
   border-bottom: 1px dashed;
   margin-bottom: 12px;
   transition: border-color 0.3s;
+  
+  /* (SỬA) Thêm giới hạn chiều cao và cuộn */
+  max-height: 120px;
+  overflow-y: auto;
 }
 
 .staged-files-container[data-theme='light'] {
@@ -84,7 +93,7 @@
   align-items: center;
   padding: 4px 8px;
   border-radius: 6px;
-  max-width: 200px; /* Giới hạn chiều rộng */
+  max-width: 200px; 
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -117,15 +126,15 @@
   flex-grow: 1;
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis; /* Dấu ... nếu tên quá dài */
+  text-overflow: ellipsis; 
 }
 
 /* (MỚI) Nút xóa file (X) */
 .staged-file-remove {
   margin-left: 4px;
-  color: #8c8c8c; /* Màu xám nhẹ */
+  color: #8c8c8c; 
 }
 .staged-file-remove:hover {
-  color: #f5222d !important; /* Màu đỏ khi hover */
+  color: #f5222d !important; 
   background-color: rgba(245, 34, 45, 0.1) !important;
 }

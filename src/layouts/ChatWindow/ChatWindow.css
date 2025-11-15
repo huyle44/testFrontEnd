@@ -1,7 +1,10 @@
 /* --- Lớp bao bọc chính cho cửa sổ chat --- */
 .chat-window-scroll {
-  flex: 1;
-  overflow-y: auto;
+  /* (SỬA) Đảm bảo có 3 dòng này: */
+  flex: 1; /* Tương đương flex-grow: 1, flex-shrink: 1, flex-basis: 0% */
+  overflow-y: auto; /* Bắt nó tự cuộn bên trong */
+  min-height: 0; /* (RẤT QUAN TRỌNG) Ngăn nó tràn vô hạn trên mobile */
+
   padding: 24px;
 }
 
@@ -64,10 +67,6 @@
 }
 
 /* --- Bong bóng tin nhắn văn bản --- */
-/* Lưu ý: Các lớp màu (.chat-bubble-user-dark, .chat-bubble-ai-light...)
-  đã được định nghĩa trong file GlobalStyles của bạn.
-  Đây là các style *cơ sở* cho bố cục.
-*/
 .chat-text-bubble {
   padding: 12px 16px;
   border-radius: 16px;
