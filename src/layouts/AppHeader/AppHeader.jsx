@@ -1,9 +1,12 @@
-import { Layout, Button, Space, Tooltip } from 'antd';
+import React from 'react';
+import { Layout, Menu, Button, Space, Tooltip, message } from 'antd';
 import {
   SunOutlined,
   MoonOutlined,
-  LeftOutlined,
+  SettingOutlined,
+  LogoutOutlined,
   PlusOutlined,
+  MenuOutlined, 
 } from '@ant-design/icons';
 
 import './AppHeader.css';
@@ -11,7 +14,8 @@ import './AppHeader.css';
 const { Header } = Layout;
 
 
-const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
+// (SỬA) Thêm 'onToggleSider'
+const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider }) => {
 
   return (
     <Header
@@ -20,15 +24,19 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
     >
       <div className="app-header-content">
         <Space size={12} align="center">
-          {screens.lg && (
-            <Button
+        
+          {/* (SỬA) Hiển thị nút Hamburger (Menu) trên mobile */}
+          {!screens.lg && (
+             <Button
               type="text"
               shape="circle"
-              icon={<LeftOutlined />}
+              icon={<MenuOutlined />}
               className="app-header-button"
               data-theme={themeMode}
+              onClick={onToggleSider} // (MỚI) Mở Drawer
             />
           )}
+
           <div>
             <div
               className="app-header-title"
@@ -36,6 +44,7 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
             >
               Interview for UI/UX Designer
             </div>
+            {/* (SỬA) Giấu subtitle trên mobile cho gọn */}
             {screens.lg && (
               <div
                 className="app-header-subtitle"
@@ -55,6 +64,8 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
             className="app-header-button"
             data-theme={themeMode}
           />
+
+          {/* (SỬA) Chỉ hiển thị nút New Chat trên desktop (lg) */}
           {screens.lg && (
             <Tooltip title="Cuộc trò chuyện mới">
               <Button

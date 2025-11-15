@@ -8,7 +8,7 @@ import {
   EditOutlined,
   DeleteOutlined,
   LeftOutlined, 
-  PlusOutlined,
+  PlusOutlined, 
 } from '@ant-design/icons';
 
 import './AppSider.css';
@@ -63,56 +63,63 @@ const AppSider = ({
               {chat.title}
             </span>
             
-            {!collapsed && (hoveredChatId === chat.id || deletingChatId === chat.id) && (
-              <Space size={4}>
-                <Button
-                  type="text"
-                  size="small"
-                  icon={<EditOutlined />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setRenamingChatId(chat.id);
-                  }}
-                  className="menu-item-edit-button"
-                  data-theme={themeMode}
-                />
-                
-                <Popconfirm
-                  title="Xóa cuộc trò chuyện?"
-                  description="Bạn có chắc muốn xóa?"
-                  placement="right"
-                  open={deletingChatId === chat.id} 
-                  onConfirm={(e) => {
-                    e.stopPropagation();
-                    handleDeleteChat(chat.id);
-                    setDeletingChatId(null); 
-                  }}
-                  onCancel={(e) => {
-                    e.stopPropagation();
-                    setDeletingChatId(null); 
-                  }}
-                  okText="Xóa"
-                  cancelText="Hủy"
-                >
+            {/* (SỬA) Cập nhật logic hiển thị nút Sửa/Xóa */}
+            {
+              // Điều kiện: (Luôn hiện trên Mobile) HOẶC (Hiện khi hover trên Desktop)
+              ((isMobile && !collapsed) || 
+               (!isMobile && !collapsed && (hoveredChatId === chat.id || deletingChatId === chat.id)))
+              && ( // "&&" thay vì "?" để code gọn hơn
+                <Space size={4}>
                   <Button
                     type="text"
                     size="small"
-                    danger
-                    icon={<DeleteOutlined />}
+                    icon={<EditOutlined />}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setDeletingChatId(chat.id); 
+                      setRenamingChatId(chat.id);
                     }}
-                    className="menu-item-delete-button"
+                    className="menu-item-edit-button"
+                    data-theme={themeMode}
                   />
-                </Popconfirm>
-              </Space>
-            )}
+                  
+                  <Popconfirm
+                    title="Xóa cuộc trò chuyện?"
+                    description="Bạn có chắc muốn xóa?"
+                    placement="right"
+                    open={deletingChatId === chat.id} 
+                    onConfirm={(e) => {
+                      e.stopPropagation();
+                      handleDeleteChat(chat.id);
+                      setDeletingChatId(null); 
+                    }}
+                    onCancel={(e) => {
+                      e.stopPropagation();
+                      setDeletingChatId(null); 
+                    }}
+                    okText="Xóa"
+                    cancelText="Hủy"
+                  >
+                    <Button
+                      type="text"
+                      size="small"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeletingChatId(chat.id); 
+                      }}
+                      className="menu-item-delete-button"
+                    />
+                  </Popconfirm>
+                </Space>
+              )
+            }
           </div>
         )
       ),
     }));
-  }, [chatSessions, renamingChatId, setRenamingChatId, handleRenameChat, collapsed, hoveredChatId, themeMode, handleDeleteChat, deletingChatId]);
+  // (SỬA) Thêm 'isMobile' vào mảng dependencies
+  }, [chatSessions, renamingChatId, setRenamingChatId, handleRenameChat, collapsed, hoveredChatId, themeMode, handleDeleteChat, deletingChatId, isMobile]);
 
   return (
     <Sider
@@ -146,7 +153,6 @@ const AppSider = ({
         </Space>
       </div>
 
-      {/* (MỚI) Nút New Chat chỉ cho Mobile */}
       {isMobile && !collapsed && (
         <div style={{ padding: '16px 16px 0 16px' }}>
           <Button 
@@ -160,11 +166,9 @@ const AppSider = ({
         </div>
       )}
 
-      {/* (SỬA) Bọc Menu trong div để nó co dãn */}
       <div 
         className="sider-menu-area" 
         data-collapsed={collapsed}
-        // (SỬA) Cho phép khu vực này cuộn nếu có nhiều chat
         style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}
       >
         <div 
@@ -176,9 +180,8 @@ const AppSider = ({
           <Tooltip title={isMobile ? "Đóng" : (collapsed ? "Mở Sidebar" : "Đóng Sidebar")} placement="right">
             <Button
               type="text"
-              // (SỬA) Thay đổi icon và hành động tùy theo mobile/desktop
               icon={isMobile ? <LeftOutlined /> : (collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />)}
-              onClick={isMobile ? onClose : onToggle} // (SỬA) Dùng prop mới
+              onClick={isMobile ? onClose : onToggle} 
               className="sider-collapse-button"
               data-theme={themeMode}
             />
