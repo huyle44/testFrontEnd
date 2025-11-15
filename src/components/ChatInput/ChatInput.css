@@ -1,12 +1,10 @@
-/* --- Lớp bao bọc chính --- */
 .chat-input-wrapper {
-  /* (SỬA) Thêm dòng này: */
-  flex-shrink: 0; /* Không bao giờ co lại */
+  /* (SỬA) Xóa flex-shrink: 0; */
 
   padding: 16px 24px;
   transition: background-color 0.3s, border-color 0.3s;
   
-  /* (SỬA) Thêm dòng này để đẩy ô input lên trên Home Bar của iPhone */
+  /* (SỬA) Giữ lại padding cho vùng an toàn iPhone */
   padding-bottom: calc(16px + env(safe-area-inset-bottom));
 }
 
@@ -75,7 +73,6 @@
   margin-bottom: 12px;
   transition: border-color 0.3s;
   
-  /* (SỬA) Thêm giới hạn chiều cao và cuộn */
   max-height: 120px;
   overflow-y: auto;
 }

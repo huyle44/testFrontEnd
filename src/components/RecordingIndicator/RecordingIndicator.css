@@ -1,7 +1,6 @@
 /* --- Lớp bao bọc chính --- */
 .recording-indicator-wrapper {
-  /* (SỬA) Thêm dòng này: */
-  flex-shrink: 0; /* Không bao giờ co lại */
+  /* (SỬA) Xóa flex-shrink: 0; */
 
   padding: 12px 24px;
   display: flex;
@@ -28,10 +27,6 @@
   font-weight: 500;
 }
 
-/* Lớp .recording-bar này đã có trong code gốc (GlobalStyles) 
-  để xử lý animation. 
-  Chúng ta chỉ cần thêm các style tĩnh cho nó.
-*/
 .recording-bar {
   display: flex;
   gap: 4px;
@@ -45,7 +40,6 @@
   border-radius: 2px;
 }
 
-/* Style riêng cho từng thanh (từ inline style cũ) */
 .recording-bar > div:nth-child(1) {
   height: 12px;
 }

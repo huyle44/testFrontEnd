@@ -7,20 +7,20 @@ import ChatWindow from './ChatWindow/ChatWindow';
 import RecordingIndicator from '../components/RecordingIndicator/RecordingIndicator';
 import ChatInput from '../components/ChatInput/ChatInput';
 
-
 import './InterviewChatbot.css'; 
 
-
-import { Layout, ConfigProvider, theme, Grid, message } from 'antd';
+// (SỬA) Xóa 'Footer' khỏi dòng import này
+import { Layout, ConfigProvider, theme, Grid, message } from 'antd'; 
 
 import { useTheme } from '../hooks/useTheme';
 import { useChat } from '../hooks/useChat';
 import { useFiles } from '../hooks/useFiles';
 import { useSpeech } from '../hooks/useSpeech';
 
-import { getCurrentTime } from '../utils/chatHelpers';
+import { getCurrentTime, recognition } from '../utils/chatHelpers';
 
-const { Content } = Layout;
+// (SỬA) Thêm 'Footer' vào đây
+const { Content, Footer } = Layout; 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 const { useBreakpoint } = Grid;
 
@@ -54,12 +54,20 @@ const InterviewChatbot = () => {
     handleFileUpload, 
     handleRemoveStagedFile 
   } = useFiles();
-
-  // handleSend là "chất keo" kết dính logic chat và logic file
+  
+  const { 
+    input, 
+    setInput, 
+    isRecording, 
+    setIsRecording,
+    handleVoiceToggle, 
+    silenceTimeoutRef,
+    inputRef 
+  } = useSpeech();
+  
   const handleSend = useCallback(() => {
-    // (FIX) Dừng ghi âm nếu đang chạy
     if (isRecording) {
-      setIsRecording(false);
+      setIsRecording(false); 
     }
     
     const currentInput = inputRef.current; 
@@ -120,19 +128,63 @@ const InterviewChatbot = () => {
 
     // 5. Kích hoạt AI
     triggerAiResponse();
-  // (SỬA) Cập nhật dependencies
-  }, [activeChat, activeChatId, setChatSessions, stagedFiles, setStagedFiles, triggerAiResponse]);
-
-
-  const { 
-    input, 
-    setInput, 
-    isRecording, 
-    setIsRecording,
-    handleVoiceToggle, 
-    silenceTimeoutRef,
-    inputRef // (SỬA) Lấy inputRef từ hook
-  } = useSpeech(handleSend, stagedFiles);
+  }, [activeChat, activeChatId, isRecording, setChatSessions, setIsRecording, setInput, setStagedFiles, stagedFiles, triggerAiResponse]);
+  
+  // (SỬA) Bước 3: Chuyển useEffect của SpeechRecognition về đây
+  useEffect(() => {
+    if (!recognition) return;
+    const clearSilenceTimeout = () => {
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+        silenceTimeoutRef.current = null;
+      }
+    };
+    if (isRecording) {
+      recognition.start();
+      recognition.onresult = (event) => {
+        clearSilenceTimeout(); 
+        let interim_transcript = '';
+        let final_transcript = '';
+        for (let i = 0; i < event.results.length; ++i) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                final_transcript += transcript + ' ';
+            } else {
+                interim_transcript += transcript;
+            }
+        }
+        setInput(final_transcript + interim_transcript);
+      };
+      recognition.onspeechend = () => {
+          clearTimeout(silenceTimeoutRef.current);
+          silenceTimeoutRef.current = setTimeout(() => {
+              console.log("15s im lặng, tự động ngắt...");
+              setIsRecording(false); 
+              const finalInput = inputRef.current;
+              if (finalInput.trim() || stagedFiles.length > 0) {
+                  handleSend();
+              }
+          }, 15000);
+      };
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        clearSilenceTimeout();
+        setIsRecording(false);
+      };
+      recognition.onend = () => {
+        clearSilenceTimeout();
+        setIsRecording(false);
+      };
+    } else {
+      recognition.stop();
+      clearSilenceTimeout();
+    }
+    return () => {
+      if (recognition) recognition.stop();
+      clearSilenceTimeout();
+    };
+  }, [isRecording, stagedFiles, handleSend, setInput, setIsRecording, silenceTimeoutRef]); 
+  
   
   // (SỬA) handleNewChat cần dọn dẹp input và speech
   const handleNewChatWrapper = () => {
@@ -189,15 +241,18 @@ const InterviewChatbot = () => {
             onNewChat={handleNewChatWrapper}
           />
 
-          <Layout>
+          {/* (SỬA) Bỏ 'style' và cấu trúc lại với Footer */}
+          <Layout> 
             <Content
               className="chatbot-content"
               data-theme={themeMode}
             >
               <ChatWindow messages={messages} messagesEndRef={messagesEndRef} themeMode={themeMode} />
+            </Content>
 
+            {/* (MỚI) Thêm component Footer để chứa input */}
+            <Footer className="chatbot-footer" data-theme={themeMode}>
               <RecordingIndicator isRecording={isRecording} themeMode={themeMode} />
-
               <ChatInput
                 input={input}
                 setInput={setInput}
@@ -209,8 +264,9 @@ const InterviewChatbot = () => {
                 stagedFiles={stagedFiles}
                 handleRemoveStagedFile={handleRemoveStagedFile}
               />
-            </Content>
+            </Footer>
           </Layout>
+          
         </Layout>
       </Layout>
     </ConfigProvider>
@@ -218,6 +274,3 @@ const InterviewChatbot = () => {
 };
 
 export default InterviewChatbot;
-
-
- 
