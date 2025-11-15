@@ -11,7 +11,7 @@ import './AppHeader.css';
 const { Header } = Layout;
 
 
-// (SỬA) Thêm 'onToggleSider'
+// Thêm 'onToggleSider'
 const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider }) => {
 
   return (
@@ -22,7 +22,7 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider }
       <div className="app-header-content">
         <Space size={12} align="center">
         
-          {/* (SỬA) Hiển thị nút Hamburger (Menu) trên mobile */}
+          {/* Hiển thị nút Hamburger (Menu) trên mobile */}
           {!screens.lg && (
              <Button
               type="text"
@@ -41,7 +41,7 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider }
             >
               Interview for UI/UX Designer
             </div>
-            {/* (SỬA) Giấu subtitle trên mobile cho gọn */}
+            {/* Giấu subtitle trên mobile cho gọn */}
             {screens.lg && (
               <div
                 className="app-header-subtitle"
@@ -62,7 +62,7 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider }
             data-theme={themeMode}
           />
 
-          {/* (SỬA) Chỉ hiển thị nút New Chat trên desktop (lg) */}
+          {/* Chỉ hiển thị nút New Chat trên desktop (lg) */}
           {screens.lg && (
             <Tooltip title="Cuộc trò chuyện mới">
               <Button

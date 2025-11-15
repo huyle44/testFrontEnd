@@ -1,7 +1,5 @@
 /* --- Lớp bao bọc chính --- */
 .recording-indicator-wrapper {
-  /* (SỬA) Xóa flex-shrink: 0; */
-
   padding: 12px 24px;
   display: flex;
   align-items: center;
