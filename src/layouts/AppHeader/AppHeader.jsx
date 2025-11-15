@@ -1,9 +1,7 @@
-import { Layout, Menu, Avatar, Button, Space, Tooltip, Dropdown, message } from 'antd';
+import { Layout, Button, Space, Tooltip } from 'antd';
 import {
   SunOutlined,
   MoonOutlined,
-  SettingOutlined,
-  LogoutOutlined,
   LeftOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
@@ -12,26 +10,11 @@ import './AppHeader.css';
 
 const { Header } = Layout;
 
-const generalMenuItems = [
-  { key: 'setting', icon: <SettingOutlined />, label: 'Setting' },
-  { key: 'logout', icon: <LogoutOutlined />, label: 'Log Out' }
-];
 
 const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
-  
-  const userMenu = (
-    <Menu
-      theme={themeMode}
-      items={generalMenuItems}
-      onClick={({ key }) => {
-        message.info(`Chức năng '${key}' đang được phát triển!`);
-      }}
-    />
-  );
 
   return (
     <Header
-      // (SỬA) Dùng className và data-theme
       className="app-header"
       data-theme={themeMode}
     >
@@ -42,14 +25,12 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
               type="text"
               shape="circle"
               icon={<LeftOutlined />}
-              // (SỬA) Dùng className và data-theme
               className="app-header-button"
               data-theme={themeMode}
             />
           )}
           <div>
             <div
-              // (SỬA) Dùng className và data-theme
               className="app-header-title"
               data-theme={themeMode}
             >
@@ -57,7 +38,6 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
             </div>
             {screens.lg && (
               <div
-                // (SỬA) Dùng className và data-theme
                 className="app-header-subtitle"
                 data-theme={themeMode}
               >
@@ -72,7 +52,6 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
             shape="circle"
             icon={themeMode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
             onClick={toggleTheme}
-            // (SỬA) Dùng className và data-theme
             className="app-header-button"
             data-theme={themeMode}
           />
@@ -83,18 +62,11 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat }) => {
                 shape="circle"
                 icon={<PlusOutlined />}
                 onClick={onNewChat}
-                // (SỬA) Dùng className và data-theme
                 className="app-header-button"
                 data-theme={themeMode}
               />
             </Tooltip>
           )}
-          <Dropdown overlay={userMenu} trigger={['hover']}>
-            {/* (GIỮ NGUYÊN) Style này là riêng biệt, giữ lại inline cũng không sao */}
-            <Avatar style={{ backgroundColor: '#1677ff', cursor: 'pointer', transition: 'all 0.3s' }} className="hover:opacity-80">
-              404
-            </Avatar>
-          </Dropdown>
         </Space>
       </div>
     </Header>
