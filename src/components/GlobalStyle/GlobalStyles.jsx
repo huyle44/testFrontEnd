@@ -1,4 +1,4 @@
-// (MỚI) Thêm CSS vào <style>
+// Thêm CSS vào <style>
 const GlobalStyles = () => (
   <style jsx global>{`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');

@@ -1,6 +1,5 @@
 /* Lớp Layout chính của toàn bộ ứng dụng */
 .chatbot-layout {
-  /* (SỬA) Dùng 100dvh (dynamic viewport height) để fix lỗi Safari */
   height: 100dvh; 
   overflow: hidden; 
 }

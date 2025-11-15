@@ -1,10 +1,7 @@
-import React from 'react';
-import { Layout, Menu, Button, Space, Tooltip, message } from 'antd';
+import { Layout, Button, Space, Tooltip } from 'antd';
 import {
   SunOutlined,
   MoonOutlined,
-  SettingOutlined,
-  LogoutOutlined,
   PlusOutlined,
   MenuOutlined, 
 } from '@ant-design/icons';

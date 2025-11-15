@@ -1,6 +1,4 @@
 .chat-input-wrapper {
-  /* (SỬA) Xóa flex-shrink: 0; (nếu có) */
-
   padding: 16px 24px;
   transition: background-color 0.3s, border-color 0.3s;
   
@@ -11,15 +9,11 @@
 /* Kiểu theme Sáng */
 .chat-input-wrapper[data-theme='light'] {
   border-top: 1px solid #f0f0f0;
-  /* (SỬA) Xóa background (vì Footer cha đã có) */
-  /* background: #ffffff; */
 }
 
 /* Kiểu theme Tối */
 .chat-input-wrapper[data-theme='dark'] {
   border-top: 1px solid #303030;
-  /* (SỬA) Xóa background (vì Footer cha đã có) */
-  /* background: #1f1f1f; */
 }
 
 /* --- Thanh nhập liệu bên trong --- */
@@ -68,7 +62,7 @@
   background: transparent;
 }
 
-/* (MỚI) Khu vực chứa các file chờ */
+/* Khu vực chứa các file chờ */
 .staged-files-container {
   padding: 0 8px 12px 8px; 
   border-bottom: 1px dashed;
@@ -86,7 +80,7 @@
   border-color: #424242;
 }
 
-/* (MỚI) Mỗi item file chờ */
+/* Mỗi item file chờ */
 .staged-file-item {
   display: inline-flex;
   align-items: center;
@@ -105,7 +99,7 @@
   color: #a6c5ff;
 }
 
-/* (MỚI) Ảnh thumbnail của file ảnh */
+/* Ảnh thumbnail của file ảnh */
 .staged-file-thumbnail {
   width: 24px;
   height: 24px;
@@ -114,13 +108,13 @@
   margin-right: 8px;
 }
 
-/* (MỚI) Icon cho file thường */
+/* Icon cho file thường */
 .staged-file-icon {
   font-size: 16px;
   margin-right: 8px;
 }
 
-/* (MỚI) Tên file */
+/* Tên file */
 .staged-file-name {
   flex-grow: 1;
   overflow: hidden;
@@ -128,7 +122,7 @@
   text-overflow: ellipsis; 
 }
 
-/* (MỚI) Nút xóa file (X) */
+/* Nút xóa file (X) */
 .staged-file-remove {
   margin-left: 4px;
   color: #8c8c8c; 

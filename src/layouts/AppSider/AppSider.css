@@ -143,7 +143,5 @@
 /* (MỚI) Thêm class cho nút xóa */
 .menu-item-delete-button {
   flex-shrink: 0;
-  /* Giữ màu đỏ 'danger' của Antd,
-     nhưng bạn có thể thêm transition nếu muốn */
 }
 
