@@ -17,10 +17,11 @@ import { useChat } from '../hooks/useChat';
 import { useFiles } from '../hooks/useFiles';
 import { useSpeech } from '../hooks/useSpeech';
 
-import { getCurrentTime, recognition } from '../utils/chatHelpers';
+// (SỬA) Import 'recognition'
+import { getCurrentTime, recognition } from '../utils/chatHelpers'; 
 
 // (SỬA) Thêm 'Footer' vào đây
-const { Content, Footer } = Layout; 
+const { Content, Footer } = Layout;
 const { darkAlgorithm, defaultAlgorithm } = theme;
 const { useBreakpoint } = Grid;
 
@@ -128,7 +129,7 @@ const InterviewChatbot = () => {
 
     // 5. Kích hoạt AI
     triggerAiResponse();
-  }, [activeChat, activeChatId, isRecording, setChatSessions, setIsRecording, setInput, setStagedFiles, stagedFiles, triggerAiResponse]);
+  }, [activeChat, activeChatId, isRecording, setIsRecording, setChatSessions, setInput, setStagedFiles, stagedFiles, triggerAiResponse]);
   
   // (SỬA) Bước 3: Chuyển useEffect của SpeechRecognition về đây
   useEffect(() => {
@@ -232,7 +233,10 @@ const InterviewChatbot = () => {
           handleDeleteChat={handleDeleteChat}
         />
 
-        <Layout>
+        {/* (SỬA) Thêm style={{ height: '100dvh', overflow: 'hidden' }}
+            vào Layout (cấp 2) để ngăn nó cuộn trên mobile
+        */}
+        <Layout style={{ height: '100dvh', overflow: 'hidden' }}>
           
           <AppHeader
             themeMode={themeMode}

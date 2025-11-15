@@ -31,5 +31,13 @@
 /* (MỚI) Style cho Footer (chứa ô input) */
 .chatbot-footer {
   padding: 0; /* Ghi đè padding mặc định của Antd */
-  /* Antd Footer đã có flex-shrink: 0 mặc định, nên nó sẽ "dính" */
+  
+  /* (SỬA) Thêm màu nền cho Footer để khớp với theme */
+  transition: background-color 0.3s, border-color 0.3s;
+}
+.chatbot-footer[data-theme='light'] {
+  background: #ffffff;
+}
+.chatbot-footer[data-theme='dark'] {
+  background: #1f1f1f;
 }

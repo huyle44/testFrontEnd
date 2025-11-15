@@ -1,9 +1,9 @@
 /* --- Lớp bao bọc chính cho cửa sổ chat --- */
 .chat-window-scroll {
-  /* (SỬA) Đảm bảo có 3 dòng này: */
-  flex: 1; /* Tương đương flex-grow: 1, flex-shrink: 1, flex-basis: 0% */
-  overflow-y: auto; /* Bắt nó tự cuộn bên trong */
-  min-height: 0; /* (RẤT QUAN TRỌNG) Ngăn nó tràn vô hạn trên mobile */
+  /* (SỬA) Đây là các thuộc tính quan trọng nhất */
+  flex: 1; /* Cho phép nó lấp đầy không gian còn lại */
+  overflow-y: auto; /* Cho phép nó cuộn */
+  min-height: 0; /* Ngăn nó tràn ra khỏi container */
 
   padding: 24px;
 }

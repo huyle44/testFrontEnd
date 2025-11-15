@@ -1,23 +1,25 @@
 .chat-input-wrapper {
-  /* (SỬA) Xóa flex-shrink: 0; */
+  /* (SỬA) Xóa flex-shrink: 0; (nếu có) */
 
   padding: 16px 24px;
   transition: background-color 0.3s, border-color 0.3s;
   
-  /* (SỬA) Giữ lại padding cho vùng an toàn iPhone */
+  /* (GIỮ LẠI) Giữ padding cho vùng an toàn iPhone */
   padding-bottom: calc(16px + env(safe-area-inset-bottom));
 }
 
 /* Kiểu theme Sáng */
 .chat-input-wrapper[data-theme='light'] {
   border-top: 1px solid #f0f0f0;
-  background: #ffffff;
+  /* (SỬA) Xóa background (vì Footer cha đã có) */
+  /* background: #ffffff; */
 }
 
 /* Kiểu theme Tối */
 .chat-input-wrapper[data-theme='dark'] {
   border-top: 1px solid #303030;
-  background: #1f1f1f;
+  /* (SỬA) Xóa background (vì Footer cha đã có) */
+  /* background: #1f1f1f; */
 }
 
 /* --- Thanh nhập liệu bên trong --- */
