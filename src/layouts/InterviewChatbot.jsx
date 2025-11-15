@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 
 import GlobalStyles from '../components/GlobalStyle/GlobalStyles';
 import AppSider from './AppSider/AppSider';
@@ -9,24 +9,23 @@ import ChatInput from '../components/ChatInput/ChatInput';
 
 import './InterviewChatbot.css'; 
 
-import { Layout, ConfigProvider, theme, Grid, message, Drawer } from 'antd'; 
+import { Layout ,ConfigProvider, theme, Grid, message, Drawer } from 'antd'; 
 
 import { useTheme } from '../hooks/useTheme';
 import { useChat } from '../hooks/useChat';
 import { useFiles } from '../hooks/useFiles';
 import { useSpeech } from '../hooks/useSpeech';
 
-import { getCurrentTime, recognition } from '../utils/chatHelpers'; 
+import { getCurrentTime, recognition, interviewQuestions, defaultWelcomeMessage } from '../utils/chatHelpers'; 
 
-const { Content, Footer } = Layout;
+const { Content, Footer } = Layout; 
 const { darkAlgorithm, defaultAlgorithm } = theme;
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid; 
 
 const InterviewChatbot = () => {
   const screens = useBreakpoint();
   const messagesEndRef = useRef(null);
   
-  // Dùng state này, BỎ state 'collapsed' cũ
   const [isSiderVisible, setIsSiderVisible] = useState(false); 
   
   const { themeMode, toggleTheme } = useTheme();
@@ -45,6 +44,14 @@ const InterviewChatbot = () => {
     handleNewChat,
     handleDeleteChat
   } = useChat();
+  
+  // Lọc danh sách file, BỎ QUA những file đã bị ẩn
+  const fileMessages = useMemo(() => 
+    messages.filter(msg => 
+      (msg.type === 'image' || msg.type === 'file') && !msg.isHiddenFromFileList
+    ),
+    [messages]
+  );
   
   const { 
     stagedFiles, 
@@ -90,9 +97,12 @@ const InterviewChatbot = () => {
         newMessages.push({
           id: crypto.randomUUID(),
           sender: 'user',
-          text: file.data, 
+          text: file.type === 'image' ? file.data : file.name, 
+          name: file.name, 
+          data: file.data, 
           time: getCurrentTime(),
-          type: file.type
+          type: file.type,
+          isHiddenFromFileList: false // Đặt flag mặc định
         });
         if (activeChat && activeChat.title === 'New Chat' && !newTitle) {
           newTitle = file.name;
@@ -117,16 +127,12 @@ const InterviewChatbot = () => {
     triggerAiResponse();
   }, [activeChat, activeChatId, isRecording, setIsRecording, setChatSessions, setInput, setStagedFiles, stagedFiles, triggerAiResponse]);
   
-  // Bước 1: Tạo một Ref để "bọc" hàm handleSend
+  // Thêm Ref cho handleSend để fix lỗi vòng lặp
   const handleSendRef = useRef(handleSend);
-
-  // Bước 2: Cập nhật Ref mỗi khi handleSend (bản gốc) thay đổi
   useEffect(() => {
     handleSendRef.current = handleSend;
   }, [handleSend]);
 
-
-  // Bước 3: Sửa useEffect của SpeechRecognition
   useEffect(() => {
     if (!recognition) return;
     const clearSilenceTimeout = () => {
@@ -136,7 +142,6 @@ const InterviewChatbot = () => {
       }
     };
     if (isRecording) {
-      // (FIX) Thêm try...catch để tránh lỗi nếu 'start' được gọi khi đang 'starting'
       try {
         recognition.start();
       } catch (e) {
@@ -163,9 +168,8 @@ const InterviewChatbot = () => {
               console.log("15s im lặng, tự động ngắt...");
               setIsRecording(false); 
               const finalInput = inputRef.current;
-              // Kiểm tra stagedFiles (lấy từ state)
+              
               if (finalInput.trim() || stagedFiles.length > 0) {
-                  // Gọi hàm handleSend thông qua Ref
                   handleSendRef.current(); 
               }
           }, 15000);
@@ -187,12 +191,9 @@ const InterviewChatbot = () => {
       if (recognition) recognition.stop();
       clearSilenceTimeout();
     };
-  // Bước 4: Xóa 'handleSend', 'stagedFiles', 'setInput' khỏi mảng dependencies
-  // Chỉ lắng nghe 'isRecording' (trigger chính)
   }, [isRecording, setIsRecording, setInput, silenceTimeoutRef, inputRef, stagedFiles]); 
   
   
-  // handleNewChat cần dọn dẹp input và speech
   const handleNewChatWrapper = () => {
     if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
     setIsRecording(false);
@@ -211,7 +212,45 @@ const InterviewChatbot = () => {
       }
   };
 
-  // Hàm để render Sider (để tái sử dụng)
+  // Hàm xóa file (là "ẩn" file)
+  const handleDeleteFileMessage = (messageId) => {
+    setChatSessions(prevSessions =>
+      prevSessions.map(chat => {
+        if (chat.id === activeChatId) {
+          return {
+            ...chat,
+            messages: chat.messages.map(msg => 
+              msg.id === messageId 
+                ? { ...msg, isHiddenFromFileList: true } // Thêm flag
+                : msg
+            )
+          };
+        }
+        return chat;
+      })
+    );
+    message.success('Đã ẩn file khỏi danh sách!');
+  };
+
+  // Hàm đổi tên file
+  const handleRenameFileMessage = (messageId, newName) => {
+    if (!newName.trim()) return;
+    setChatSessions(prevSessions =>
+      prevSessions.map(chat => {
+        if (chat.id === activeChatId) {
+          return {
+            ...chat,
+            messages: chat.messages.map(msg => 
+              msg.id === messageId ? { ...msg, name: newName } : msg
+            )
+          };
+        }
+        return chat;
+      })
+    );
+  };
+  
+  // Hàm để render Sider
   const renderSider = (isMobile = false) => (
     <AppSider 
       isMobile={isMobile}
@@ -231,6 +270,10 @@ const InterviewChatbot = () => {
       setRenamingChatId={setRenamingChatId}
       handleRenameChat={handleRenameChat}
       handleDeleteChat={handleDeleteChat}
+
+      fileMessages={fileMessages} // fileMessages giờ đã được lọc
+      handleRenameFileMessage={handleRenameFileMessage}
+      handleDeleteFileMessage={handleDeleteFileMessage}
     />
   );
 
