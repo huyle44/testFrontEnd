@@ -156,6 +156,7 @@
 }
 
 .chat-input-bar .ant-btn-primary {
+  /* Ghi đè size="large" (40px) của Antd */
   height: 36px;
   width: 36px;
   
@@ -165,6 +166,7 @@
   padding: 0;
 }
 
+/* Tùy chỉnh kích thước icon Gửi */
 .chat-input-bar .ant-btn-primary .anticon-send {
-  font-size: 16px;
+  font-size: 16px; /* Kích thước icon (mặc định là 18px) */
 }

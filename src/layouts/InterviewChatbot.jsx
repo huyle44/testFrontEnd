@@ -16,7 +16,7 @@ import { useChat } from '../hooks/useChat';
 import { useFiles } from '../hooks/useFiles';
 import { useSpeech } from '../hooks/useSpeech';
 
-import { getCurrentTime, recognition, interviewQuestions, defaultWelcomeMessage } from '../utils/chatHelpers'; 
+import { getCurrentTime, recognition } from '../utils/chatHelpers'; 
 
 const { Content, Footer } = Layout; 
 const { darkAlgorithm, defaultAlgorithm } = theme;
@@ -26,6 +26,7 @@ const InterviewChatbot = () => {
   const screens = useBreakpoint();
   const messagesEndRef = useRef(null);
   
+  // Dùng state này, BỎ state 'collapsed' cũ
   const [isSiderVisible, setIsSiderVisible] = useState(false); 
   
   const { themeMode, toggleTheme } = useTheme();
@@ -102,7 +103,7 @@ const InterviewChatbot = () => {
           data: file.data, 
           time: getCurrentTime(),
           type: file.type,
-          isHiddenFromFileList: false // Đặt flag mặc định
+          isHiddenFromFileList: false 
         });
         if (activeChat && activeChat.title === 'New Chat' && !newTitle) {
           newTitle = file.name;
@@ -125,7 +126,7 @@ const InterviewChatbot = () => {
     setInput(''); 
     setStagedFiles([]);
     triggerAiResponse();
-  }, [activeChat, activeChatId, isRecording, setIsRecording, setChatSessions, setInput, setStagedFiles, stagedFiles, triggerAiResponse]);
+  }, [activeChat, activeChatId, isRecording, setIsRecording, setChatSessions, setInput, setStagedFiles, stagedFiles, triggerAiResponse, inputRef]);
   
   // Thêm Ref cho handleSend để fix lỗi vòng lặp
   const handleSendRef = useRef(handleSend);
@@ -232,7 +233,7 @@ const InterviewChatbot = () => {
     message.success('Đã ẩn file khỏi danh sách!');
   };
 
-  // Hàm đổi tên file
+  //
   const handleRenameFileMessage = (messageId, newName) => {
     if (!newName.trim()) return;
     setChatSessions(prevSessions =>
@@ -250,7 +251,7 @@ const InterviewChatbot = () => {
     );
   };
   
-  // Hàm để render Sider
+  //
   const renderSider = (isMobile = false) => (
     <AppSider 
       isMobile={isMobile}
@@ -271,7 +272,7 @@ const InterviewChatbot = () => {
       handleRenameChat={handleRenameChat}
       handleDeleteChat={handleDeleteChat}
 
-      fileMessages={fileMessages} // fileMessages giờ đã được lọc
+      fileMessages={fileMessages} 
       handleRenameFileMessage={handleRenameFileMessage}
       handleDeleteFileMessage={handleDeleteFileMessage}
     />
@@ -316,6 +317,7 @@ const InterviewChatbot = () => {
             screens={screens}
             onNewChat={handleNewChatWrapper}
             onToggleSider={() => setIsSiderVisible(!isSiderVisible)}
+            activeChatTitle={activeChat?.title || "InterviewAI"}
           />
 
           <Layout> 

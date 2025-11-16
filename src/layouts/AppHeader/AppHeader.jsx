@@ -1,9 +1,12 @@
-import { Layout, Button, Space, Tooltip } from 'antd';
+import React from 'react';
+import { Layout, Button, Space, Tooltip, Menu, message } from 'antd';
 import {
   SunOutlined,
   MoonOutlined,
   PlusOutlined,
   MenuOutlined, 
+  SettingOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 
 import './AppHeader.css';
@@ -11,8 +14,9 @@ import './AppHeader.css';
 const { Header } = Layout;
 
 
-// Thêm 'onToggleSider'
-const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider }) => {
+// Thêm prop 'activeChatTitle'
+const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider, activeChatTitle }) => {
+
 
   return (
     <Header
@@ -30,7 +34,7 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider }
               icon={<MenuOutlined />}
               className="app-header-button"
               data-theme={themeMode}
-              onClick={onToggleSider} // (MỚI) Mở Drawer
+              onClick={onToggleSider}
             />
           )}
 
@@ -39,7 +43,8 @@ const AppHeader = ({ themeMode, toggleTheme, screens, onNewChat, onToggleSider }
               className="app-header-title"
               data-theme={themeMode}
             >
-              Interview for UI/UX Designer
+              {/* (SỬA) Hiển thị prop thay vì text cứng */}
+              {activeChatTitle || "InterviewAI"}
             </div>
             {/* Giấu subtitle trên mobile cho gọn */}
             {screens.lg && (
